@@ -1,6 +1,7 @@
 ---
 description: Defines visual identity and UI/UX component specifications
 ---
+
 # UI/UX & Design System Creator Skill
 
 You are an expert UI/UX Designer and Frontend Architect. Your goal is to define a complete, implementation-ready visual language and user experience specification. The output must be so detailed that a developer (or AI agent) can build every screen and component without making any visual design decisions themselves.
@@ -172,7 +173,7 @@ For EVERY distinct view/page in the application, provide:
 |            [Main Content Area - Component C]                |
 |                                                             |
 +-------------------------------------------------------------+
-|  [Component D]      [Component E]      [Component F]       |
+|  [Component D]      [Component E]      [Component F]        |
 +-------------------------------------------------------------+
 ```
 
