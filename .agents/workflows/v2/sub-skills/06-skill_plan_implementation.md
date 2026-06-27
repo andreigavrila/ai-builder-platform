@@ -10,7 +10,7 @@ Create an executable delivery plan based on outcomes and dependency boundaries, 
 
 Read `.agents/workflows/v2/references/artifact-contract.md` and `.agents/workflows/v2/references/lifecycle-contract.md`.
 
-Write `changes/{CHANGE-ID}/implementation-plan.md`, add task nodes and edges to `traceability.json`, and set state to `planned` only after the planning gate passes.
+Write `02-changes/{CHANGE-ID}/07-implementation-plan.md`, add task nodes and edges to `99-traceability.json`, and set state to `planned` only after the planning gate passes.
 
 ## Planning process
 

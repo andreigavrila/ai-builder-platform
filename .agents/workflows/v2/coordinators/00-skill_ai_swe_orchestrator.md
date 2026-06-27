@@ -23,23 +23,23 @@ Read before acting:
 ## Routing
 
 1. Classify the user's input as project-foundation material, a concrete change request, or both. Ask only when the distinction materially changes the requested outcome.
-2. If the core blueprint does not exist, run `skill_initialize_core_blueprint` using project-foundation material. Do not automatically turn the entire product vision into one implementation change.
-3. If initial implementation is requested, extract the smallest agreed release slice into an initiative or feature request and run `skill_ingest_requirement` for that slice.
-4. If the core exists and the user supplied a concrete modification, run `skill_ingest_requirement`.
-5. If the change has no profile, run `skill_classify_change`.
-6. If impact is unknown or stale, run `skill_analyze_impact`.
-7. Run `skill_design_change` for artifacts required by the profile and risk.
-8. Run `skill_plan_implementation` after the specification gate passes.
-9. Run `skill_execute_implementation` after the planning gate passes and implementation is authorized.
-10. Run `skill_validate_implementation` from the original request and actual repository state.
+2. If the core blueprint does not exist, run `01-skill_initialize_core_blueprint` using project-foundation material. Do not automatically turn the entire product vision into one implementation change.
+3. If initial implementation is requested, extract the smallest agreed release slice into an initiative or feature request and run `02-skill_ingest_requirement` for that slice.
+4. If the core exists and the user supplied a concrete modification, run `02-skill_ingest_requirement`.
+5. If the change has no profile, run `03-skill_classify_change`.
+6. If impact is unknown or stale, run `04-skill_analyze_impact`.
+7. Run `05-skill_design_change` for artifacts required by the profile and risk.
+8. Run `06-skill_plan_implementation` after the specification gate passes.
+9. Run `07-skill_execute_implementation` after the planning gate passes and implementation is authorized.
+10. Run `08-skill_validate_implementation` from the original request and actual repository state.
 11. Route `changes-required` findings back to execution, then validate again.
-12. After acceptance, run `skill_update_core_blueprint` only when the change introduced durable project knowledge.
+12. After acceptance, run `09-skill_update_core_blueprint` only when the change introduced durable project knowledge.
 
 Invoke specialist workflows directly when the environment supports workflow composition. Otherwise execute their instructions in the current session; do not make the user manually relay unchanged artifacts between stages.
 
 ## Resume protocol
 
-1. Read `manifest.json`, the selected `status.json`, and relevant traceability nodes.
+1. Read `00-manifest.json`, the selected `00-status.json`, and relevant nodes in `99-traceability.json`.
 2. Verify that required artifacts exist and that the change's `core_version` is current.
 3. Detect the last passed quality gate from evidence, not merely the state string.
 4. Resume from the first incomplete or stale gate.
@@ -70,6 +70,6 @@ Avoid asking for approval at every stage. Pause only for blocking decisions or a
 The lifecycle is complete when:
 
 - Validation verdict is `accepted` or `accepted-with-notes`.
-- `status.json` is `accepted`.
+- `00-status.json` is `accepted`.
 - Traceability reaches implementation and evidence nodes for every active acceptance criterion.
 - Durable knowledge is either merged into the core blueprint or explicitly recorded as change-local.

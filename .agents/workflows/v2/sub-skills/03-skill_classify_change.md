@@ -10,7 +10,7 @@ Choose the smallest change profile that provides adequate control for the actual
 
 Read `.agents/workflows/v2/references/artifact-contract.md` and `.agents/workflows/v2/references/lifecycle-contract.md`.
 
-Write `changes/{CHANGE-ID}/classification.md` and update `status.json.profile`.
+Write `02-changes/{CHANGE-ID}/02-classification.md` and update `00-status.json.profile`.
 
 ## Classification dimensions
 

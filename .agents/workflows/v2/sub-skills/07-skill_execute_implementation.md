@@ -12,9 +12,9 @@ Read `.agents/workflows/v2/references/artifact-contract.md` and `.agents/workflo
 
 Modify only authorized project files. Create or update:
 
-- `changes/{CHANGE-ID}/execution-log.md`
+- `02-changes/{CHANGE-ID}/09-execution-log.md`
 - CODE and EVIDENCE nodes and traceability edges
-- `status.json`, moving through `implementing` to `verifying` when execution checks complete
+- `00-status.json`, moving through `implementing` to `verifying` when execution checks complete
 
 ## Preflight
 

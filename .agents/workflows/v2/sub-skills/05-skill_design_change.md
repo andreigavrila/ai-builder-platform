@@ -12,11 +12,11 @@ Read `.agents/workflows/v2/references/artifact-contract.md` and `.agents/workflo
 
 Depending on profile and classification, write:
 
-- `specification.md`
-- `technical-design.md`
-- `test-plan.md`
+- `04-specification.md`
+- `05-technical-design.md`
+- `06-test-plan.md`
 
-Update relevant design, rule, NFR, ADR-candidate, and test nodes in `traceability.json`. Set state to `specified` only after the specification gate passes.
+Update relevant design, rule, NFR, ADR-candidate, and test nodes in `99-traceability.json`. Set state to `specified` only after the specification gate passes.
 
 ## Functional specification
 
@@ -57,7 +57,7 @@ Do not prescribe arbitrary test-layer percentages. Do not place large proto-test
 
 ## Profile behavior
 
-- Patch: omit separate artifacts only when `classification.md` explains why and the implementation plan can contain the necessary specification and checks without ambiguity.
+- Patch: omit separate artifacts only when `02-classification.md` explains why and `07-implementation-plan.md` can contain the necessary specification and checks without ambiguity.
 - Feature: produce all three artifacts.
 - Initiative: produce all three artifacts and decompose into coordinated subordinate changes when one implementation plan would be unsafe or unreviewable.
 

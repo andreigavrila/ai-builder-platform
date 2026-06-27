@@ -10,7 +10,7 @@ Keep the core blueprint aligned with accepted system reality without turning it 
 
 Read `.agents/workflows/v2/references/artifact-contract.md` and the core-update gate in `.agents/workflows/v2/references/lifecycle-contract.md`.
 
-Update relevant core files, `manifest.json`, `traceability.json`, and ADRs. Do not modify implementation code in this workflow.
+Update relevant numbered core files, `00-manifest.json`, `99-traceability.json`, and ADRs. Do not modify implementation code in this workflow.
 
 ## Promotion criteria
 
@@ -30,11 +30,12 @@ Keep one-off behavior, task history, transient rollout details, and feature-loca
 1. Confirm the source change is accepted and validation evidence exists.
 2. Compare proposed updates with actual code and the current core blueprint.
 3. Update only owning artifacts; replace duplication with references.
-4. Create or supersede ADRs for material architecture decisions.
-5. Update traceability and mark superseded nodes without renumbering IDs.
-6. Increment `core_version` when interpretation of future work can change.
-7. Assess every non-terminal change pinned to the previous version. Mark it `stale` only when the update affects its assumptions, design, or plan.
-8. Run the blueprint validator and resolve structural errors.
+4. When product evidence resolves an assumption, remove the assumption and incorporate the result into its target product epic or scope boundary; update any related product dependency.
+5. Create or supersede ADRs for material architecture decisions.
+6. Update traceability and mark superseded nodes without renumbering IDs.
+7. Increment `core_version` when interpretation of future work can change.
+8. Assess every non-terminal change pinned to the previous version. Mark it `stale` only when the update affects its assumptions, design, or plan.
+9. Run the blueprint validator and resolve structural errors.
 
 ## Output summary
 

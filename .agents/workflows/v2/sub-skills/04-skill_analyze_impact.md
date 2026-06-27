@@ -10,7 +10,7 @@ Build an evidence-backed impact boundary before choosing a design.
 
 Read `.agents/workflows/v2/references/artifact-contract.md` and `.agents/workflows/v2/references/lifecycle-contract.md`.
 
-Write `changes/{CHANGE-ID}/impact-analysis.md` and update traceability edges to impacted core nodes.
+Write `02-changes/{CHANGE-ID}/03-impact-analysis.md` and update `99-traceability.json` edges to impacted core nodes.
 
 ## Process
 

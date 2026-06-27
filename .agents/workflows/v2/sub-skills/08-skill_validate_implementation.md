@@ -14,7 +14,7 @@ Read:
 - `.agents/workflows/v2/references/lifecycle-contract.md`
 - `.agents/workflows/v2/references/validation-contract.md`
 
-Write or revise `changes/{CHANGE-ID}/validation-report.md`, add finding and evidence relationships to `traceability.json`, and update `status.json` according to the verdict.
+Write or revise `02-changes/{CHANGE-ID}/10-validation-report.md`, add finding and evidence relationships to `99-traceability.json`, and update `00-status.json` according to the verdict.
 
 ## Process
 

@@ -12,13 +12,13 @@ Read `.agents/workflows/v2/references/artifact-contract.md` and `.agents/workflo
 
 Create:
 
-- `changes/{CHANGE-ID}/request.md`
-- `changes/{CHANGE-ID}/status.json`
-- Requirement nodes and source edges in `traceability.json`
+- `02-changes/{CHANGE-ID}/01-request.md`
+- `02-changes/{CHANGE-ID}/00-status.json`
+- Requirement nodes and source edges in `99-traceability.json`
 
 ## Process
 
-1. Preserve the raw requirement verbatim in `request.md` or link to an immutable supplied artifact.
+1. Preserve the raw requirement verbatim in `01-request.md` or link to an immutable supplied artifact.
 2. Assign a stable change ID and requirement IDs. Reuse supplied IDs when valid and unambiguous.
 3. Normalize the request into problem, desired outcome, in-scope behavior, exclusions, constraints, and observable acceptance criteria.
 4. Inspect the core blueprint and repository for discoverable answers.
@@ -27,7 +27,7 @@ Create:
 7. Ask the smallest grouped set of blocking questions. For non-blocking gaps, choose a reversible default and record it.
 8. Set state to `clarified` when the intake gate passes; otherwise set `blocked` and list the blocking decisions.
 
-## `request.md` sections
+## `01-request.md` sections
 
 1. Raw request
 2. Problem and desired outcome

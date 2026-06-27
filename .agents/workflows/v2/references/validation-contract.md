@@ -5,7 +5,7 @@ Validate implementation independently from the executor's narrative. Treat plans
 ## Required inputs
 
 - Original normalized request and acceptance criteria.
-- Core blueprint version pinned by `status.json`.
+- Core blueprint version pinned by `00-status.json`.
 - Classification, impact analysis, specification, design, and test plan required by the profile.
 - Actual repository diff and current files.
 - Test, build, lint, migration, benchmark, or inspection results.

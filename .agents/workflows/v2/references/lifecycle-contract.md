@@ -54,7 +54,7 @@ Group blocking questions and ask the smallest set needed for the next gate.
 - Changes remain within the approved scope.
 - Unrelated worktree changes are preserved.
 - Required tests, builds, static checks, migrations, and inspections have run or are explicitly marked unavailable.
-- Commands and material results are recorded in `execution-log.md`.
+- Commands and material results are recorded in `09-execution-log.md`.
 - Deviations are classified and recorded; material deviations return the change to design or planning.
 
 ### Validation gate
@@ -69,6 +69,8 @@ Group blocking questions and ask the smallest set needed for the next gate.
 
 - Only durable, cross-change knowledge enters the core blueprint.
 - Feature-local details remain in the change package.
+- Resolved product assumptions are removed and their validated result is incorporated into the owning product epic or scope boundary; related product dependencies are updated when applicable.
+- No blocking product assumption remains in a `ready` product artifact.
 - Changed architectural decisions receive an ADR.
 - Core version increments when downstream interpretation can change.
 - Open changes pinned to the previous version are assessed for staleness.

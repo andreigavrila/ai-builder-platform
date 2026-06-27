@@ -8,7 +8,7 @@ The repository contains workflow instructions and their supporting contracts. It
 
 ## Start here
 
-Use the [v2 AI-SWE coordinator](.agents/workflows/v2/coordinators/skill_ai_swe_orchestrator.md) for new work. It determines whether the input describes:
+Use the [v2 AI-SWE coordinator](.agents/workflows/v2/coordinators/00-skill_ai_swe_orchestrator.md) for new work. It determines whether the input describes:
 
 - A project foundation that should initialize or update the core blueprint.
 - A concrete change that should enter the change lifecycle.
@@ -61,16 +61,16 @@ Changes may also become `blocked`, `rejected`, or `stale`. Only independent vali
 
 | Need | Workflow |
 |:---|:---|
-| Start or resume an end-to-end lifecycle | [AI-SWE coordinator](.agents/workflows/v2/coordinators/skill_ai_swe_orchestrator.md) |
-| Establish durable project knowledge | [Initialize core blueprint](.agents/workflows/v2/sub-skills/skill_initialize_core_blueprint.md) |
-| Normalize complete or incomplete requirements | [Ingest requirement](.agents/workflows/v2/sub-skills/skill_ingest_requirement.md) |
-| Select patch, feature, or initiative depth | [Classify change](.agents/workflows/v2/sub-skills/skill_classify_change.md) |
-| Determine repository and system impact | [Analyze impact](.agents/workflows/v2/sub-skills/skill_analyze_impact.md) |
-| Define behavior, technical design, and tests | [Design change](.agents/workflows/v2/sub-skills/skill_design_change.md) |
-| Produce traceable implementation tasks | [Plan implementation](.agents/workflows/v2/sub-skills/skill_plan_implementation.md) |
-| Modify code and collect execution evidence | [Execute implementation](.agents/workflows/v2/sub-skills/skill_execute_implementation.md) |
-| Independently assess the implementation | [Validate implementation](.agents/workflows/v2/sub-skills/skill_validate_implementation.md) |
-| Promote durable accepted knowledge | [Update core blueprint](.agents/workflows/v2/sub-skills/skill_update_core_blueprint.md) |
+| Start or resume an end-to-end lifecycle | [00 AI-SWE coordinator](.agents/workflows/v2/coordinators/00-skill_ai_swe_orchestrator.md) |
+| Establish durable project knowledge | [01 Initialize core blueprint](.agents/workflows/v2/sub-skills/01-skill_initialize_core_blueprint.md) |
+| Normalize complete or incomplete requirements | [02 Ingest requirement](.agents/workflows/v2/sub-skills/02-skill_ingest_requirement.md) |
+| Select patch, feature, or initiative depth | [03 Classify change](.agents/workflows/v2/sub-skills/03-skill_classify_change.md) |
+| Determine repository and system impact | [04 Analyze impact](.agents/workflows/v2/sub-skills/04-skill_analyze_impact.md) |
+| Define behavior, technical design, and tests | [05 Design change](.agents/workflows/v2/sub-skills/05-skill_design_change.md) |
+| Produce traceable implementation tasks | [06 Plan implementation](.agents/workflows/v2/sub-skills/06-skill_plan_implementation.md) |
+| Modify code and collect execution evidence | [07 Execute implementation](.agents/workflows/v2/sub-skills/07-skill_execute_implementation.md) |
+| Independently assess the implementation | [08 Validate implementation](.agents/workflows/v2/sub-skills/08-skill_validate_implementation.md) |
+| Promote durable accepted knowledge | [09 Update core blueprint](.agents/workflows/v2/sub-skills/09-skill_update_core_blueprint.md) |
 
 ## Blueprint artifacts
 
@@ -78,10 +78,10 @@ V2 blueprints default to:
 
 ```text
 .agents/blueprints/{project-slug}/
-  manifest.json
-  traceability.json
-  core/
-  changes/{CHANGE-ID}/
+  00-manifest.json
+  01-core/
+  02-changes/{CHANGE-ID}/
+  99-traceability.json
 ```
 
 The core blueprint contains durable product, domain, architecture, quality, UX, engineering, repository, and decision knowledge. Each change package contains only the request-specific analysis, design, plan, execution log, and validation report.
