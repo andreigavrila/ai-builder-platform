@@ -10,6 +10,7 @@ Coordinate preparation, execution, and validation without reproducing specialist
 
 Read before acting:
 
+- `.agents/workflows/v2/references/blueprint-authoring-philosophy.md`
 - `.agents/workflows/v2/references/artifact-contract.md`
 - `.agents/workflows/v2/references/lifecycle-contract.md`
 - For validation routing, `.agents/workflows/v2/references/validation-contract.md`

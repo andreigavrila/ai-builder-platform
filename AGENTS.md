@@ -88,9 +88,10 @@ The core blueprint contains durable product, domain, architecture, quality, UX, 
 
 Read these contracts before creating or changing v2 artifacts:
 
-1. [Artifact contract](.agents/workflows/v2/references/artifact-contract.md)
-2. [Lifecycle contract](.agents/workflows/v2/references/lifecycle-contract.md)
-3. [Validation contract](.agents/workflows/v2/references/validation-contract.md) when validating implementations
+1. [Blueprint authoring philosophy](.agents/workflows/v2/references/blueprint-authoring-philosophy.md)
+2. [Artifact contract](.agents/workflows/v2/references/artifact-contract.md)
+3. [Lifecycle contract](.agents/workflows/v2/references/lifecycle-contract.md)
+4. [Validation contract](.agents/workflows/v2/references/validation-contract.md) when validating implementations
 
 ## Operating rules
 
