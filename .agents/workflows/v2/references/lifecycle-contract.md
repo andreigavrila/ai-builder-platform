@@ -69,6 +69,8 @@ Group blocking questions and ask the smallest set needed for the next gate.
 
 - Only durable, cross-change knowledge enters the core blueprint.
 - Feature-local details remain in the change package.
+- Distilled operational artifacts are refreshed, confirmed current, or marked stale when core changes affect production-agent behavior.
+- Custom skill plans and custom check workflows are updated when accepted durable knowledge changes repeatable construction or validation work.
 - Resolved product assumptions are removed and their validated result is incorporated into the owning product epic or scope boundary; related product dependencies are updated when applicable.
 - No blocking product assumption remains in a `ready` product artifact.
 - Changed architectural decisions receive an ADR.

@@ -6,6 +6,7 @@ Validate implementation independently from the executor's narrative. Treat plans
 
 - Original normalized request and acceptance criteria.
 - Core blueprint version pinned by `00-status.json`.
+- Relevant distilled operational rules from `03-operational/`, especially build rules and validation rules tied to the pinned core version.
 - Classification, impact analysis, specification, design, and test plan required by the profile.
 - Actual repository diff and current files.
 - Test, build, lint, migration, benchmark, or inspection results.

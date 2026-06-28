@@ -2,6 +2,8 @@
 
 Use this contract for every v2 workflow. It defines where durable project knowledge, change-specific design, execution state, and validation evidence live.
 
+For the relationship between human core knowledge, distilled AI-production context, and per-requirement change blueprints, also read `.agents/workflows/v2/references/knowledge-layer-contract.md`.
+
 ## Root layout
 
 ```text
@@ -28,10 +30,16 @@ Use this contract for every v2 workflow. It defines where durable project knowle
       07-implementation-plan.md
       09-execution-log.md
       10-validation-report.md
+  03-operational/
+    00-agent-context.md
+    01-build-rules.md
+    02-validation-rules.md
+    03-custom-skill-plan.md
+    04-custom-check-workflow.md
   99-traceability.json
 ```
 
-Numeric prefixes are normative and express reading/lifecycle order. Use two digits so lexical directory listings preserve the SDLC cascade. Root metadata is `00`, durable core is `01-core`, change packages are `02-changes`, cross-artifact traceability is `99`, core knowledge is `01` through `08`, change status is `00`, and change work products are `01` through `10`. Optional change-local preparation evidence may use the next free number between planning and execution; for example, `08-structural-validation.md`.
+Numeric prefixes are normative and express reading/lifecycle order. Use two digits so lexical directory listings preserve the SDLC cascade. Root metadata is `00`, durable human-reviewable core is `01-core`, per-requirement change packages are `02-changes`, distilled AI-production context is `03-operational`, and cross-artifact traceability is `99`. Core knowledge is `01` through `08`, change status is `00`, and change work products are `01` through `10`. Optional change-local preparation evidence may use the next free number between planning and execution; for example, `08-structural-validation.md`.
 
 Default `blueprintDir` to `.agents/blueprints/{project-slug}`.
 
@@ -48,9 +56,16 @@ Default `blueprintDir` to `.agents/blueprints/{project-slug}`.
 | Current codebase structure and ownership | `01-core/07-repository-map.md` |
 | Durable technical decisions | `01-core/08-decisions/ADR-*.md` |
 | One requested modification | `02-changes/{CHANGE-ID}/` |
+| Always-loaded AI implementation context | `03-operational/00-agent-context.md` |
+| Project-specific build rules for production agents | `03-operational/01-build-rules.md` |
+| Project-specific validation rules and evidence expectations | `03-operational/02-validation-rules.md` |
+| Candidate project-local skills | `03-operational/03-custom-skill-plan.md` |
+| Candidate custom check workflow | `03-operational/04-custom-check-workflow.md` |
 | Cross-artifact relationships | `99-traceability.json` |
 
 Reference information owned elsewhere instead of copying it. Record a proposed core change in the change package until `09-skill_update_core_blueprint` accepts it.
+
+Operational artifacts are derived from the core and must not contradict it. If a distilled operational artifact conflicts with a core artifact, the core artifact wins and the operational artifact must be refreshed.
 
 ## Required metadata
 
@@ -246,6 +261,148 @@ Use software-neutral, human-readable sections in this order:
 - Stop when unresolved uncertainty would materially change domain structure, data ownership, authority, lifecycle meaning, privacy or compliance posture, irreversible scope, or public behavior.
 - If any condition is `Blocked`, the domain artifact status must be `blocked`, and downstream lifecycle stages must not proceed beyond the current gate.
 
+## Architecture artifact contract
+
+`01-core/03-architecture.md` is the durable technical map for the system. It describes architecture drivers, constraints, style, stack options, major views, component and module responsibilities, dependency direction, data ownership, integration contracts, trust boundaries, deployment topology, technical risks, tradeoffs, and accepted architectural decisions. It is not a product promise, domain model, task plan, quality checklist, engineering playbook, or repository directory listing.
+
+Use these sections in this order:
+
+1. `Purpose`
+2. `Architecture context`
+3. `Architecture drivers and constraints`
+4. `Architecture style and options`
+5. `Architecture views`
+6. `Runtime components and modules`
+7. `Boundaries and dependency rules`
+8. `Data architecture`
+9. `Integration architecture`
+10. `Trust boundaries and security posture`
+11. `Deployment and operational topology`
+12. `Architecture risks and tradeoffs`
+13. `Architecture decisions`
+14. `Assumptions and open questions`
+15. `Generation stop conditions`
+
+### Purpose
+
+- Explain what technical system this artifact describes and what future design, implementation, testing, and validation decisions it constrains.
+- State whether the artifact reflects verified current state, intended target state, or a mix of both.
+- Reference product and domain artifacts only to explain technical constraints; do not restate product epics or domain rules.
+
+### Architecture context
+
+- Summarize the system type, runtime shape, main actors or entry points, and known external systems.
+- Identify the main use cases or user journeys that justify the architecture. Keep this to architecture-driving use cases, not the full product backlog.
+- For brownfield projects, cite repository evidence for current architecture claims, such as configuration, entry points, schemas, API contracts, deployment files, tests, or package manifests.
+- For greenfield or partial projects, label context as intended, assumed, or undecided.
+- Explicitly separate current verified architecture from future target architecture when they differ.
+
+### Architecture drivers and constraints
+
+Use compact tables or short lists to record the forces that shape the architecture.
+
+- Include architecture-driving use cases, quality-attribute priorities, team skills, delivery constraints, budget or operational constraints, regulatory or privacy constraints, external-system constraints, and technology constraints when they materially apply.
+- State `Optimizes for` and `Does not optimize for yet` so future work does not over-design for unneeded scale, integration volume, analytics depth, compliance depth, portability, or platform abstraction.
+- Quality attributes may be prioritized here, but measurable targets, test methods, and acceptance thresholds belong in `04-quality.md`.
+- Use stable `DRIVER-*` IDs for drivers that explain architecture choices or ADRs.
+
+### Architecture style and options
+
+- State the selected or recommended architecture style, such as modular monolith, layered monolith, event-driven system, microservices, serverless, data pipeline, plugin architecture, desktop application, game client, or embedded system.
+- Explain why the style fits the architecture drivers and what it trades off.
+- If stack or style is not fully accepted, include a compact recommendation table with `Option ID`, `Option`, `Fit`, `Strengths`, `Tradeoffs`, and `Recommendation`. Use stable `STACK-*` or `ARCH-OPTION-*` IDs.
+- Name explicit split or evolution conditions. For example, when a modular monolith should split into services, when a queue should be introduced, or when a managed platform dependency becomes justified.
+- Route material choices to `Architecture decisions`; do not bury irreversible stack or topology choices in prose.
+
+### Architecture views
+
+- Include compact C4-style views when useful: system context, container/deployable view, and optionally a module/layer view.
+- Mermaid diagrams are preferred for compactness and maintainability. Keep diagrams small enough to fit on one screen.
+- Pair each diagram with one short paragraph explaining what the view is meant to constrain.
+- Do not use diagrams to introduce components, external systems, or data flows that are not also represented in the relevant component, data, integration, or trust-boundary sections.
+
+### Runtime components and modules
+
+Use a Markdown table with columns `Component ID`, `Component`, `Type`, `Responsibility`, `Owns`, `Inbound contracts`, `Outbound dependencies`, and `Status/evidence`.
+
+- Use stable `COMPONENT-*` IDs for material runtime components, libraries, stores, external systems, workers, or infrastructure pieces.
+- `Type` should use concise values such as `UI`, `API`, `Service`, `Worker`, `Library`, `Data store`, `External system`, `Infrastructure`, or `Test harness`.
+- `Responsibility` should describe what the component is accountable for, not its implementation tasks.
+- `Owns` should identify technical ownership such as data, state, API surface, business capability enforcement, rendering concern, job execution, or infrastructure responsibility.
+- `Inbound contracts` and `Outbound dependencies` should name contracts or dependency targets, not vague words such as "frontend" or "backend" when a sharper name is known.
+- `Status/evidence` should distinguish `Verified`, `Intended`, `Assumed`, or `Undecided`; include repository paths or source references when verified.
+- Add a compact module table when internal module boundaries, ownership, extension points, or future split points matter. Use stable `MODULE-*` IDs.
+
+### Boundaries and dependency rules
+
+- Record architectural boundaries that future work must preserve, including layering, module ownership, allowed dependency direction, forbidden imports, runtime isolation, data access, and test boundaries.
+- Use stable `ARCH-BOUNDARY-*` or `ARCH-RULE-*` IDs when a boundary will be referenced by changes, tests, validation, or ADRs.
+- State rules as obligations or prohibitions that can be checked through code review, static analysis, tests, or validation.
+- Include concrete major violation examples under the relevant boundary or rule when mistakes are plausible. Each example should name the bad design, why it violates the boundary, and where it should be caught. Prefer examples that production agents might otherwise accidentally implement, such as direct UI-to-database access, skipped authorization, controller-owned domain rules, cross-module persistence writes, direct third-party calls from the wrong layer, or infrastructure dependencies inside domain modules.
+- Do not duplicate product scope boundaries or domain invariants. Reference them only when describing where they are enforced technically.
+
+### Data architecture
+
+- Record technical sources of truth, data stores, schema areas, ownership keys, tenant boundaries, transaction boundaries, caches, derived data, imports, exports, retention-sensitive movement, audit-relevant flows, migrations, backup/recovery assumptions, and reporting or analytics separation when relevant.
+- Use stable `DATA-*` or `FLOW-*` IDs for material data stores or flows.
+- For each material flow, identify source, destination, triggering action, data class, trust or tenant boundary crossed, persistence behavior, and failure handling when known.
+- Keep domain-level ownership in `02-domain.md`; architecture owns how that ownership is enforced in storage, APIs, services, events, and infrastructure.
+
+### Integration architecture
+
+- Record public APIs, internal module contracts, external service contracts, event contracts, webhooks, file formats, browser or platform APIs, and compatibility requirements that shape implementation.
+- Use stable `CONTRACT-*` IDs for contracts that requirements, tests, validation, or ADRs may reference.
+- For each contract, identify provider, consumer, format or protocol, versioning expectation, compatibility rule, error behavior, and evidence or status when known.
+- Record integration rules that govern future additions, such as when an external service may be introduced, how adapters isolate third-party systems, how retries and idempotency are handled, and how external contracts are versioned.
+- Keep speculative integrations out of the component model unless the product or an accepted change has made them durable. Mention excluded integration categories as rules when product boundaries make them important.
+
+### Trust boundaries and security posture
+
+- Identify security-relevant boundaries across users, organizations, processes, browsers, servers, networks, data stores, external systems, secrets, credentials, and personal or sensitive data.
+- Use stable `TRUST-*` IDs for trust boundaries that need explicit design or validation.
+- State how authentication, authorization, tenant isolation, input validation, output encoding, secret handling, and auditability are expected to be enforced when known.
+- If a sensitive boundary is not yet designed, record it as an assumption or open question and assess whether it blocks generation.
+
+### Deployment and operational topology
+
+- Record runtime environments, deployable units, build artifacts, hosting model, configuration sources, background jobs, scheduled tasks, storage services, observability paths, backup or recovery expectations, and local development topology.
+- Distinguish local development, test, staging, and production topology when materially different.
+- For brownfield projects, cite deployment, infrastructure, environment, or CI files as evidence.
+- Do not duplicate engineering commands or repository path inventories; those belong in `06-engineering.md` and `07-repository-map.md`.
+- Include operations-facing expectations that architecture must enable, such as health checks, logs, metrics, tracing, migrations, incident diagnosis, rollback hooks, and environment separation. Detailed CI/CD and evidence commands belong in `06-engineering.md`.
+
+### Architecture risks and tradeoffs
+
+Use a Markdown table with columns `Risk ID`, `Risk or tradeoff`, `Why accepted or plausible`, `Impact`, `Mitigation or watch signal`, and `Carries forward to`.
+
+- Use stable `ARCH-RISK-*` IDs.
+- Include only technical architecture risks and tradeoffs, not product adoption risks already owned by `01-product.md`.
+- Cover risks introduced by style, stack, data ownership, security posture, integration choices, deployment topology, team skills, cost exposure, migration strategy, and operational complexity when they materially apply.
+- Link each row to an ADR, quality attribute, boundary, assumption, or future change where it must be resolved or watched.
+
+### Architecture decisions
+
+- List accepted architectural decisions with stable `ADR-*` references and a one-sentence consequence.
+- Include a concise ADR backlog for material unresolved choices, such as architecture style, stack selection, deployment topology, authentication, tenant isolation strategy, migration strategy, external integration policy, observability, and data-retention approach when they apply.
+- Store material decision records under `01-core/08-decisions/ADR-*.md`.
+- Do not create ADRs for obvious framework defaults, temporary implementation details, or choices still under consideration.
+- If no architectural decisions are accepted yet, state that explicitly.
+
+### Assumptions and open questions
+
+- Use one unified Markdown table with columns `ID`, `Type`, `Importance`, `Applies to`, `Current position`, `Why it matters`, and `Resolution path`.
+- `Type` must be `Assumption` or `Question`.
+- `Importance` must be `Blocking`, `High`, `Medium`, or `Low`. Use `Blocking` only when the uncertainty must stop downstream generation.
+- Record reversible defaults as assumptions with a named gate where they must be revisited.
+- Do not present unverified technical guesses as facts in component, data, contract, or topology sections.
+
+### Generation stop conditions
+
+- Use a Markdown table with columns `Condition`, `Status`, `Why it stops generation`, and `Current assessment`.
+- Mark each condition as `Clear` or `Blocked`.
+- Stop when unresolved uncertainty would materially change component boundaries, data ownership, trust boundaries, deployment topology, integration contracts, irreversible technology choices, migration strategy, security or compliance posture, production authority, cost exposure, or public behavior.
+- If any condition is `Blocked`, the architecture artifact status must be `blocked`, and downstream design or implementation planning must not proceed beyond the current gate.
+
 ## Machine-readable files
 
 `00-manifest.json` must contain:
@@ -300,7 +457,7 @@ Allowed profiles are `unclassified`, `patch`, `feature`, and `initiative`. Use `
 }
 ```
 
-Preferred ID prefixes are `CHANGE`, `OUTCOME`, `EPIC`, `BOUNDARY`, `DEPENDENCY`, `RISK`, `ASSUMPTION`, `QUESTION`, `REL`, `REQ`, `RULE`, `NFR`, `ADR`, `TEST`, `TASK`, `CODE`, `EVIDENCE`, and `FINDING`. Preserve IDs across revisions; mark obsolete nodes superseded instead of renumbering them.
+Preferred ID prefixes are `CHANGE`, `OUTCOME`, `EPIC`, `BOUNDARY`, `DEPENDENCY`, `RISK`, `ASSUMPTION`, `QUESTION`, `REL`, `REQ`, `RULE`, `DRIVER`, `STACK`, `ARCH-OPTION`, `COMPONENT`, `MODULE`, `ARCH-BOUNDARY`, `ARCH-RULE`, `DATA`, `FLOW`, `CONTRACT`, `TRUST`, `ARCH-RISK`, `NFR`, `ADR`, `TEST`, `TASK`, `CODE`, `EVIDENCE`, and `FINDING`. Preserve IDs across revisions; mark obsolete nodes superseded instead of renumbering them.
 
 ## Change profiles
 

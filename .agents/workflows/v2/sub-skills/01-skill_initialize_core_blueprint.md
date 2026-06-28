@@ -8,12 +8,13 @@ Create the durable system description used by future change packages.
 
 ## Contract and outputs
 
-Read `.agents/workflows/v2/references/artifact-contract.md` and `.agents/workflows/v2/references/lifecycle-contract.md`.
+Read `.agents/workflows/v2/references/artifact-contract.md`, `.agents/workflows/v2/references/knowledge-layer-contract.md`, and `.agents/workflows/v2/references/lifecycle-contract.md`.
 
 Write under `{blueprintDir}`:
 
 - `00-manifest.json` and `99-traceability.json`.
 - All files under `01-core/` defined by the artifact contract.
+- Initial distilled operational artifacts under `03-operational/` when enough core knowledge exists to guide production agents.
 - ADRs only for material decisions that are actually established.
 
 ## Inputs
@@ -30,8 +31,9 @@ Write under `{blueprintDir}`:
 4. Identify missing information and classify it as discoverable, blocking, or non-blocking.
 5. Ask only the blocking questions required to establish product boundaries or irreversible constraints.
 6. Produce concise core artifacts with stable IDs and cross-references.
-7. Initialize core version `1`; use a higher version only when reconstructing documented history.
-8. Run the blueprint validator and resolve structural errors.
+7. Distill the initial operational layer from the core: always-loaded agent context, build rules, validation rules, candidate custom skills, and candidate custom check workflow. Mark any file `draft` or `blocked` when core knowledge is insufficient.
+8. Initialize core version `1`; use a higher version only when reconstructing documented history.
+9. Run the blueprint validator and resolve structural errors.
 
 ## Core artifact requirements
 
@@ -73,7 +75,25 @@ Create a human-readable domain artifact using the domain artifact contract. Use 
 
 ### 03 Architecture
 
-Record system context, components, boundaries, dependency rules, data ownership, integration contracts, deployment topology, trust boundaries, and accepted ADRs. For brownfield projects, cite repository evidence.
+Create a durable architecture brief using the architecture artifact contract. Use sections in this order: `Purpose`, `Architecture context`, `Architecture drivers and constraints`, `Architecture style and options`, `Architecture views`, `Runtime components and modules`, `Boundaries and dependency rules`, `Data architecture`, `Integration architecture`, `Trust boundaries and security posture`, `Deployment and operational topology`, `Architecture risks and tradeoffs`, `Architecture decisions`, `Assumptions and open questions`, and `Generation stop conditions`.
+
+- Do not create a product, domain, repository-map, or implementation-plan duplicate. Product owns user promise, outcomes, product dependencies, and product risks. Domain owns shared nouns, rules, relationships, states, and authority. Repository map owns path inventory and command locations. Architecture owns technical shape: runtime components, dependency direction, data ownership in systems, contracts, trust boundaries, deployment topology, and accepted technical decisions.
+- State whether the artifact describes verified current state, intended target state, or both. For brownfield projects, inspect code, package manifests, configuration, schemas, API definitions, deployment files, tests, and CI before describing current architecture; cite concrete paths or source references in `Status/evidence`.
+- Use `Architecture context` to summarize runtime shape, entry points, major actors or clients, external systems, architecture-driving use cases, and the current-vs-target distinction. Label greenfield or partial-project claims as intended, assumed, or undecided.
+- Add `Architecture drivers and constraints` before technology inventory. Cover architecture-driving use cases, quality-attribute priorities, team skills, delivery constraints, budget or operational constraints, regulatory or privacy constraints, external-system constraints, and technology constraints when they apply. State what the architecture optimizes for and what it does not optimize for yet. Use stable `DRIVER-*` IDs for material drivers.
+- Add `Architecture style and options`. State the selected or recommended architecture style and justify it through the drivers. When stack, style, cloud, database, or integration approach is not accepted yet, include a compact option table with `Option ID`, `Option`, `Fit`, `Strengths`, `Tradeoffs`, and `Recommendation`. Use stable `STACK-*` or `ARCH-OPTION-*` IDs and route material choices to ADRs.
+- Add `Architecture views` with compact C4-style Mermaid diagrams when helpful: system context, container/deployable view, and optionally module/layer view. Do not introduce components or flows in diagrams that are missing from the corresponding component, data, integration, or trust-boundary sections.
+- Add `Runtime components and modules` as a table with `Component ID`, `Component`, `Type`, `Responsibility`, `Owns`, `Inbound contracts`, `Outbound dependencies`, and `Status/evidence`. Use stable `COMPONENT-*` IDs for material UI, API, service, worker, library, data-store, external-system, infrastructure, or test-harness components. Add a compact `MODULE-*` table when internal modules, ownership boundaries, extension points, or future split points matter.
+- Write component responsibilities as durable accountability, not task lists. `Owns` should identify technical ownership such as data, state, API surface, rendering concern, business-capability enforcement, job execution, or infrastructure responsibility.
+- Add `Boundaries and dependency rules` with stable `ARCH-BOUNDARY-*` or `ARCH-RULE-*` IDs where future work, tests, validation, or ADRs may refer to them. Make allowed and forbidden dependencies directional and checkable, especially across UI, domain, application, infrastructure, persistence, integration, and test boundaries. Under the relevant boundary or rule, include concrete major violation examples when boundary mistakes are plausible; explain the bad design, why it violates the boundary, and where it should be caught.
+- Add `Data architecture` for sources of truth, stores, schema areas, ownership keys, tenant boundaries, transaction boundaries, caches, derived data, imports, exports, retention-sensitive movement, audit-relevant flows, migrations, backup/recovery assumptions, and reporting or analytics separation when relevant. Use stable `DATA-*` or `FLOW-*` IDs where useful. Explain how domain ownership is enforced technically instead of restating the domain rule.
+- Add `Integration architecture` for public APIs, internal module contracts, external service contracts, event contracts, webhooks, file formats, browser or platform APIs, compatibility requirements, adapter rules, retry/idempotency expectations, and rules for adding future integrations. Use stable `CONTRACT-*` IDs for contracts that requirements, tests, validation, or ADRs may reference.
+- Add `Trust boundaries and security posture` for actors, organizations, processes, browsers, servers, networks, data stores, external systems, secrets, credentials, personal or sensitive data, and cross-tenant boundaries. Avoid generic "auth" language; state the expected enforcement point when known.
+- Add `Deployment and operational topology` for runtime environments, deployable units, build artifacts, hosting model, configuration sources, background jobs, scheduled tasks, storage services, observability paths, health checks, backup or recovery expectations, and local development topology. Keep engineering commands in `06-engineering.md` and path inventories in `07-repository-map.md`.
+- Add `Architecture risks and tradeoffs` as a table with `Risk ID`, `Risk or tradeoff`, `Why accepted or plausible`, `Impact`, `Mitigation or watch signal`, and `Carries forward to`. Use stable `ARCH-RISK-*` IDs and include only technical architecture risks, not product risks.
+- Add `Architecture decisions` as accepted `ADR-*` references with one-sentence consequences plus a concise ADR backlog for material unresolved choices. Create ADR files only for material durable choices that are established; explicitly state when no ADRs are accepted yet.
+- Merge assumptions and open questions into one table with `ID`, `Type`, `Importance`, `Applies to`, `Current position`, `Why it matters`, and `Resolution path`. Use `Blocking`, `High`, `Medium`, or `Low` importance. Do not present unverified technical guesses as facts.
+- Add `Generation stop conditions`. Mark each condition `Clear` or `Blocked`. Stop generation and set the architecture artifact status to `blocked` when unresolved uncertainty would materially change component boundaries, data ownership, trust boundaries, deployment topology, integration contracts, irreversible technology choices, migration strategy, security or compliance posture, production authority, cost exposure, or public behavior.
 
 ### 04 Quality
 
@@ -91,6 +111,17 @@ Record languages and supported versions, package and build conventions, coding r
 
 Record important paths, module responsibilities, dependency direction, test locations, generated files, ownership, and commands confirmed from the repository. Mark intended paths separately from existing paths.
 
+### Operational distillation
+
+Create the distilled AI-production layer described by the knowledge-layer contract.
+
+- `03-operational/00-agent-context.md` must be compact enough to load by default and must include the product purpose, non-goals, critical domain rules, chosen or current architecture direction, security/data boundaries, and links to canonical core artifacts.
+- `03-operational/01-build-rules.md` must turn core knowledge into project-specific implementation guardrails, including module boundaries, dependency direction, tenant or authority rules, data/migration rules, UX constraints, and forbidden shortcuts.
+- `03-operational/02-validation-rules.md` must turn core quality, domain, architecture, and engineering knowledge into project-specific validation expectations and evidence requirements.
+- `03-operational/03-custom-skill-plan.md` must list candidate project-local skills only when a repeatable procedure is useful; do not create skill proposals that merely duplicate static core content.
+- `03-operational/04-custom-check-workflow.md` must identify deterministic checks, model-reviewed checks, evidence paths, and check gaps that should become custom validation scripts or workflows.
+- Each operational artifact must identify the core version it distills and must be refreshed or marked stale whenever core changes alter production-agent behavior.
+
 ## Quality gate
 
 - `01-product.md` explains the main problem and the product's enduring purpose.
@@ -107,6 +138,14 @@ Record important paths, module responsibilities, dependency direction, test loca
 - `02-domain.md` records ownership, authority, and domain boundaries for important domain objects where future work could otherwise assign authority implicitly.
 - `02-domain.md` has a unified assumptions and open questions table with importance and resolution paths.
 - `02-domain.md` defines generation stop conditions and is marked `blocked` when any stop condition is blocked.
+- `03-architecture.md` explains its purpose, separates verified current state from intended target state, and cites repository evidence for brownfield architecture claims.
+- `03-architecture.md` records architecture-driving use cases, quality-attribute priorities, constraints, optimization goals, non-goals, style and stack options, and the tradeoffs behind the recommended direction.
+- `03-architecture.md` includes compact architecture views where useful and identifies runtime components and modules with stable IDs, responsibilities, owned technical concerns, inbound contracts, outbound dependencies, and status or evidence.
+- `03-architecture.md` records checkable boundaries, dependency rules, concrete major violation examples, data architecture, integration architecture, trust boundaries, deployment and operations topology, technical risks/tradeoffs, and accepted or candidate ADR references without duplicating product, domain, quality, engineering, or repository-map artifacts.
+- `03-architecture.md` has a unified assumptions and open questions table with importance and resolution paths.
+- `03-architecture.md` defines generation stop conditions and is marked `blocked` when any stop condition is blocked.
+- `03-operational/` exists when enough core knowledge exists to guide production agents, or its missing pieces are explicitly marked blocked with the core knowledge needed to finish them.
+- Distilled operational artifacts do not contradict the core and are compact enough to be loaded by default for implementation and validation work.
 - Contradictions between requirements and repository reality are surfaced.
 - Core files contain durable guidance rather than feature-local implementation plans.
 - Unknowns are retained explicitly instead of filled with plausible detail.

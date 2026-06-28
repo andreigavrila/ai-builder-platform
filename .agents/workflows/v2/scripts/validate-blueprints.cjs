@@ -10,10 +10,12 @@ const TRACEABILITY_FILE = "99-traceability.json";
 const STATUS_FILE = "00-status.json";
 const CORE_DIRECTORY = "01-core";
 const CHANGES_DIRECTORY = "02-changes";
+const OPERATIONAL_DIRECTORY = "03-operational";
 const DECISIONS_DIRECTORY = "08-decisions";
 const PRODUCT_FILE = "01-product.md";
 const DOMAIN_FILE = "02-domain.md";
 const CORE_FILES = ["01-product.md", "02-domain.md", "03-architecture.md", "04-quality.md", "05-ux-system.md", "06-engineering.md", "07-repository-map.md"];
+const OPERATIONAL_FILES = ["00-agent-context.md", "01-build-rules.md", "02-validation-rules.md", "03-custom-skill-plan.md", "04-custom-check-workflow.md"];
 const PRODUCT_SECTIONS = ["Purpose", "Target users", "Outcomes", "Product epics", "Scope boundaries", "Product dependencies", "Product risks"];
 const DOMAIN_SECTIONS = ["Purpose", "Core concepts and entities", "Out-of-scope domain concepts", "Relationships", "States and transitions", "Domain events", "Core rules and constraints", "Ownership, authority, and boundaries", "Assumptions and open questions", "Generation stop conditions"];
 const PRODUCT_FORBIDDEN_SECTIONS = ["Facts", "Decisions", "Open questions"];
@@ -507,6 +509,8 @@ function validateBlueprint(root, selectedChange = null) {
   validateProductArtifact(coreDir, result);
   validateDomainArtifact(coreDir, result);
   if (!isDirectory(path.join(coreDir, DECISIONS_DIRECTORY))) result.error(`Missing ADR directory: ${path.join(coreDir, DECISIONS_DIRECTORY)}`);
+  const operationalDir = path.join(root, OPERATIONAL_DIRECTORY);
+  for (const filename of OPERATIONAL_FILES) if (!isFile(path.join(operationalDir, filename))) result.error(`Missing operational artifact: ${path.join(operationalDir, filename)}`);
   const { nodes, edges } = validateTraceability(root, result);
   const changesDir = path.join(root, CHANGES_DIRECTORY);
   let candidates = [];
@@ -531,8 +535,10 @@ function selfTest() {
   try {
     const root = path.join(temporaryRoot, "blueprint");
     const coreDir = path.join(root, CORE_DIRECTORY);
+    const operationalDir = path.join(root, OPERATIONAL_DIRECTORY);
     const changeDir = path.join(root, CHANGES_DIRECTORY, "CHANGE-DEMO-001");
     fs.mkdirSync(path.join(coreDir, DECISIONS_DIRECTORY), { recursive: true });
+    fs.mkdirSync(operationalDir, { recursive: true });
     fs.mkdirSync(changeDir, { recursive: true });
     const productContent = `# Product
 
@@ -656,6 +662,7 @@ unchecked -> invalid
     fs.writeFileSync(path.join(coreDir, PRODUCT_FILE), productContent, "utf8");
     fs.writeFileSync(path.join(coreDir, DOMAIN_FILE), domainContent, "utf8");
     for (const filename of CORE_FILES.filter((name) => name !== PRODUCT_FILE && name !== DOMAIN_FILE)) fs.writeFileSync(path.join(coreDir, filename), `# ${filename}\n`, "utf8");
+    for (const filename of OPERATIONAL_FILES) fs.writeFileSync(path.join(operationalDir, filename), `# ${filename}\n`, "utf8");
     writeJson(path.join(root, MANIFEST_FILE), { schema_version: 2, project_slug: "demo", core_version: 1, lifecycle_status: "active", updated_at: "2026-01-01" });
     for (const filename of ["01-request.md", "02-classification.md", "03-impact-analysis.md", "07-implementation-plan.md", "09-execution-log.md", "10-validation-report.md"]) {
       fs.writeFileSync(path.join(changeDir, filename), `# ${filename}\n`, "utf8");
