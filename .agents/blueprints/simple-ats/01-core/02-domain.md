@@ -48,18 +48,18 @@ The domain blueprint is intentionally not a fuller restatement of the product bl
 
 | Relationship ID | From | Relationship | To | Cardinality | Meaning |
 |:---|:---|:---|:---|:---|:---|
-| REL-SIMPLE-ATS-001 | Customer organization | owns | Customer-user | one-to-many | Customer-users act inside a customer organization. |
-| REL-SIMPLE-ATS-002 | Customer organization | owns | Candidate | one-to-many | Candidate identity and access are scoped to one customer organization. |
-| REL-SIMPLE-ATS-003 | Customer organization | owns | Job opening | one-to-many | Job openings are customer-organization records. |
-| REL-SIMPLE-ATS-004 | Candidate | has | Candidate relationship | one-to-many | One candidate can be considered in multiple recruiting contexts. |
-| REL-SIMPLE-ATS-005 | Candidate relationship | references | Job opening | many-to-one or optional | A candidate relationship can track candidacy for a specific job opening when job context is present. |
-| REL-SIMPLE-ATS-006 | Candidate relationship | uses current stage from | Hiring workflow | many-to-one | Candidate progress must use stages from an applicable workflow. |
-| REL-SIMPLE-ATS-007 | Hiring workflow | contains | Workflow stage | one-to-many | Workflow stages define allowed progress values. |
-| REL-SIMPLE-ATS-008 | Customer organization | owns | Company contact | one-to-many | Company contacts are scoped to the customer organization's recruiting work. |
-| REL-SIMPLE-ATS-009 | Customer organization | owns | Internal contact | one-to-many | Internal contacts are scoped to the customer organization's recruiting work. |
-| REL-SIMPLE-ATS-010 | Activity record | attaches to | Recruiting context | many-to-one-or-more | Notes, interactions, and next steps must be connected to candidate, job, contact, or workflow context. |
-| REL-SIMPLE-ATS-011 | Activity record | authored by | Customer-user | many-to-one | Activity history needs a responsible author. |
-| REL-SIMPLE-ATS-012 | Customer-user | has | Role | many-to-one-or-more | Roles express simple authority within a customer organization. |
+| 02DOM-REL-SIMPLE-ATS-001 | Customer organization | owns | Customer-user | one-to-many | Customer-users act inside a customer organization. |
+| 02DOM-REL-SIMPLE-ATS-002 | Customer organization | owns | Candidate | one-to-many | Candidate identity and access are scoped to one customer organization. |
+| 02DOM-REL-SIMPLE-ATS-003 | Customer organization | owns | Job opening | one-to-many | Job openings are customer-organization records. |
+| 02DOM-REL-SIMPLE-ATS-004 | Candidate | has | Candidate relationship | one-to-many | One candidate can be considered in multiple recruiting contexts. |
+| 02DOM-REL-SIMPLE-ATS-005 | Candidate relationship | references | Job opening | many-to-one or optional | A candidate relationship can track candidacy for a specific job opening when job context is present. |
+| 02DOM-REL-SIMPLE-ATS-006 | Candidate relationship | uses current stage from | Hiring workflow | many-to-one | Candidate progress must use stages from an applicable workflow. |
+| 02DOM-REL-SIMPLE-ATS-007 | Hiring workflow | contains | Workflow stage | one-to-many | Workflow stages define allowed progress values. |
+| 02DOM-REL-SIMPLE-ATS-008 | Customer organization | owns | Company contact | one-to-many | Company contacts are scoped to the customer organization's recruiting work. |
+| 02DOM-REL-SIMPLE-ATS-009 | Customer organization | owns | Internal contact | one-to-many | Internal contacts are scoped to the customer organization's recruiting work. |
+| 02DOM-REL-SIMPLE-ATS-010 | Activity record | attaches to | Recruiting context | many-to-one-or-more | Notes, interactions, and next steps must be connected to candidate, job, contact, or workflow context. |
+| 02DOM-REL-SIMPLE-ATS-011 | Activity record | authored by | Customer-user | many-to-one | Activity history needs a responsible author. |
+| 02DOM-REL-SIMPLE-ATS-012 | Customer-user | has | Role | many-to-one-or-more | Roles express simple authority within a customer organization. |
 
 ## States and transitions
 
@@ -120,20 +120,20 @@ open -> canceled
 
 | Rule ID | Applies to | Rule | Rationale |
 |:---|:---|:---|:---|
-| RULE-SIMPLE-ATS-001 | Customer-user; REL-SIMPLE-ATS-001 | Every customer-user must belong to at least one customer organization before accessing organization-owned recruiting records. | Access needs an organization context. |
-| RULE-SIMPLE-ATS-002 | Customer organization; REL-SIMPLE-ATS-002; REL-SIMPLE-ATS-003; REL-SIMPLE-ATS-008; REL-SIMPLE-ATS-009 | Every candidate, job opening, candidate relationship, hiring workflow, contact, and activity record must be owned by exactly one customer organization. | Tenant ownership is the domain boundary for records. |
-| RULE-SIMPLE-ATS-003 | Customer-user; Customer organization | A customer-user must not access, modify, or list records owned by a customer organization they are not authorized to use. | Cross-organization access would violate the core domain boundary. |
-| RULE-SIMPLE-ATS-004 | Candidate | A candidate profile belongs to one customer organization; the same real-world person in different customer organizations is not automatically a shared cross-customer candidate. | No global candidate identity is established. |
-| RULE-SIMPLE-ATS-005 | Candidate relationship; REL-SIMPLE-ATS-004 | A candidate relationship must reference exactly one candidate and at least one recruiting context, such as a job opening or hiring workflow. | Candidate progress is context-specific. |
-| RULE-SIMPLE-ATS-006 | Job opening; REL-SIMPLE-ATS-003 | A job opening must belong to exactly one customer organization. | Jobs cannot float outside the ownership boundary. |
-| RULE-SIMPLE-ATS-007 | Hiring workflow; Workflow stage; REL-SIMPLE-ATS-007 | A hiring workflow must contain simple, human-readable workflow stages. | Workflow progress must stay understandable. |
-| RULE-SIMPLE-ATS-008 | Candidate relationship; Workflow stage; REL-SIMPLE-ATS-006 | A candidate relationship's workflow status must be one of the stages allowed by the applicable hiring workflow. | Status values need a governing workflow. |
-| RULE-SIMPLE-ATS-009 | Candidate relationship state | Hired, rejected, and withdrawn are terminal candidate relationship outcomes unless a later accepted change defines reopening behavior. | Terminal outcomes need stable interpretation. |
-| RULE-SIMPLE-ATS-010 | Company contact; Internal contact | Company contacts and internal contacts must be distinguishable in the domain. | The same word "contact" covers people with different involvement and authority. |
-| RULE-SIMPLE-ATS-011 | Activity record; REL-SIMPLE-ATS-010; REL-SIMPLE-ATS-011 | An activity record must have an owning customer organization, an authoring customer-user, and at least one relevant recruiting context. | Activity history must be attributable and contextual. |
-| RULE-SIMPLE-ATS-012 | Activity record; Interaction | Activity records may document notes, interactions, and next steps, but they must not imply the product sent an email, synchronized a calendar event, or performed an external communication action. | Recorded history is not proof of external communication. |
-| RULE-SIMPLE-ATS-013 | Role; REL-SIMPLE-ATS-012 | Basic role separation may restrict organization administration separately from day-to-day recruiting work. | Administration authority is distinct from recruiting activity authority. |
-| RULE-SIMPLE-ATS-014 | Out-of-scope AI screening concepts | The domain must not include automated candidate ranking, screening, matching, or hiring-decision authority. | The product explicitly excludes AI hiring decision behavior. |
+| 02DOM-RULE-SIMPLE-ATS-001 | Customer-user; 02DOM-REL-SIMPLE-ATS-001 | Every customer-user must belong to at least one customer organization before accessing organization-owned recruiting records. | Access needs an organization context. |
+| 02DOM-RULE-SIMPLE-ATS-002 | Customer organization; 02DOM-REL-SIMPLE-ATS-002; 02DOM-REL-SIMPLE-ATS-003; 02DOM-REL-SIMPLE-ATS-008; 02DOM-REL-SIMPLE-ATS-009 | Every candidate, job opening, candidate relationship, hiring workflow, contact, and activity record must be owned by exactly one customer organization. | Tenant ownership is the domain boundary for records. |
+| 02DOM-RULE-SIMPLE-ATS-003 | Customer-user; Customer organization | A customer-user must not access, modify, or list records owned by a customer organization they are not authorized to use. | Cross-organization access would violate the core domain boundary. |
+| 02DOM-RULE-SIMPLE-ATS-004 | Candidate | A candidate profile belongs to one customer organization; the same real-world person in different customer organizations is not automatically a shared cross-customer candidate. | No global candidate identity is established. |
+| 02DOM-RULE-SIMPLE-ATS-005 | Candidate relationship; 02DOM-REL-SIMPLE-ATS-004 | A candidate relationship must reference exactly one candidate and at least one recruiting context, such as a job opening or hiring workflow. | Candidate progress is context-specific. |
+| 02DOM-RULE-SIMPLE-ATS-006 | Job opening; 02DOM-REL-SIMPLE-ATS-003 | A job opening must belong to exactly one customer organization. | Jobs cannot float outside the ownership boundary. |
+| 02DOM-RULE-SIMPLE-ATS-007 | Hiring workflow; Workflow stage; 02DOM-REL-SIMPLE-ATS-007 | A hiring workflow must contain simple, human-readable workflow stages. | Workflow progress must stay understandable. |
+| 02DOM-RULE-SIMPLE-ATS-008 | Candidate relationship; Workflow stage; 02DOM-REL-SIMPLE-ATS-006 | A candidate relationship's workflow status must be one of the stages allowed by the applicable hiring workflow. | Status values need a governing workflow. |
+| 02DOM-RULE-SIMPLE-ATS-009 | Candidate relationship state | Hired, rejected, and withdrawn are terminal candidate relationship outcomes unless a later accepted change defines reopening behavior. | Terminal outcomes need stable interpretation. |
+| 02DOM-RULE-SIMPLE-ATS-010 | Company contact; Internal contact | Company contacts and internal contacts must be distinguishable in the domain. | The same word "contact" covers people with different involvement and authority. |
+| 02DOM-RULE-SIMPLE-ATS-011 | Activity record; 02DOM-REL-SIMPLE-ATS-010; 02DOM-REL-SIMPLE-ATS-011 | An activity record must have an owning customer organization, an authoring customer-user, and at least one relevant recruiting context. | Activity history must be attributable and contextual. |
+| 02DOM-RULE-SIMPLE-ATS-012 | Activity record; Interaction | Activity records may document notes, interactions, and next steps, but they must not imply the product sent an email, synchronized a calendar event, or performed an external communication action. | Recorded history is not proof of external communication. |
+| 02DOM-RULE-SIMPLE-ATS-013 | Role; 02DOM-REL-SIMPLE-ATS-012 | Basic role separation may restrict organization administration separately from day-to-day recruiting work. | Administration authority is distinct from recruiting activity authority. |
+| 02DOM-RULE-SIMPLE-ATS-014 | Out-of-scope AI screening concepts | The domain must not include automated candidate ranking, screening, matching, or hiring-decision authority. | The product explicitly excludes AI hiring decision behavior. |
 
 ## Ownership, authority, and boundaries
 
@@ -150,16 +150,16 @@ open -> canceled
 
 | ID | Type | Importance | Applies to | Current position | Why it matters | Resolution path |
 |:---|:---|:---|:---|:---|:---|:---|
-| ASSUMPTION-SIMPLE-ATS-001 | Assumption | Medium | Hiring workflow; Workflow stage | The initial workflow stages can use sourced, contacted, screening, interview, offer, hired, rejected, and withdrawn as a default stage set. | Stage choices affect candidate relationship states and tests. | Revisit during first implementation change design. |
-| ASSUMPTION-SIMPLE-ATS-002 | Assumption | High | Candidate relationship | A candidate associated with multiple jobs should have separate candidate relationships for each job or workflow context. | This determines whether progress is candidate-global or context-specific. | Confirm before data model and API design. |
-| ASSUMPTION-SIMPLE-ATS-003 | Assumption | Medium | Company contact; Internal contact | Company contacts and internal contacts are contact records, not authenticated users by default. | Treating contacts as users would change authority and access rules. | Revisit only if contact login or collaboration is requested. |
-| ASSUMPTION-SIMPLE-ATS-004 | Assumption | Medium | Role | Basic role separation can start with organization administrator and standard recruiting user. | Role depth affects authority and UX complexity. | Refine during authorization design. |
-| ASSUMPTION-SIMPLE-ATS-005 | Assumption | Low | Activity record | Notes, interactions, and next steps can share an activity-history concept while remaining distinguishable by type. | This affects activity organization but not the core domain boundary. | Revisit during activity UX and data design. |
-| QUESTION-SIMPLE-ATS-001 | Question | Medium | Candidate profile; Job opening; Company contact; Internal contact | Exact required fields are not defined yet. | Required fields affect validation and data quality. | Answer during first scoped implementation specification. |
-| QUESTION-SIMPLE-ATS-002 | Question | Medium | Hiring workflow | Workflows may be organization-wide defaults, job-specific configurations, or both. | Workflow ownership affects relationship and configuration rules. | Decide before implementing workflow configuration. |
-| QUESTION-SIMPLE-ATS-003 | Question | Medium | Candidate relationship state | It is not yet decided whether users can move backward between non-terminal workflow stages. | Transition rules affect history, validation, and UI actions. | Decide before implementing workflow transitions. |
-| QUESTION-SIMPLE-ATS-004 | Question | Medium | Candidate | Duplicate candidate handling inside one customer organization is not defined. | Duplicate policy affects identity, search, and data cleanup behavior. | Decide when candidate search or merge behavior is scoped. |
-| QUESTION-SIMPLE-ATS-005 | Question | High | Candidate; Contact; Activity record | Retention, deletion, and anonymization expectations for personal data are not defined. | Privacy expectations may affect data lifecycle and authority. | Resolve before production handling of real candidate/contact data. |
+| 02DOM-ASSUMPTION-SIMPLE-ATS-001 | Assumption | Medium | Hiring workflow; Workflow stage | The initial workflow stages can use sourced, contacted, screening, interview, offer, hired, rejected, and withdrawn as a default stage set. | Stage choices affect candidate relationship states and tests. | Revisit during first implementation change design. |
+| 02DOM-ASSUMPTION-SIMPLE-ATS-002 | Assumption | High | Candidate relationship | A candidate associated with multiple jobs should have separate candidate relationships for each job or workflow context. | This determines whether progress is candidate-global or context-specific. | Confirm before data model and API design. |
+| 02DOM-ASSUMPTION-SIMPLE-ATS-003 | Assumption | Medium | Company contact; Internal contact | Company contacts and internal contacts are contact records, not authenticated users by default. | Treating contacts as users would change authority and access rules. | Revisit only if contact login or collaboration is requested. |
+| 02DOM-ASSUMPTION-SIMPLE-ATS-004 | Assumption | Medium | Role | Basic role separation can start with organization administrator and standard recruiting user. | Role depth affects authority and UX complexity. | Refine during authorization design. |
+| 02DOM-ASSUMPTION-SIMPLE-ATS-005 | Assumption | Low | Activity record | Notes, interactions, and next steps can share an activity-history concept while remaining distinguishable by type. | This affects activity organization but not the core domain boundary. | Revisit during activity UX and data design. |
+| 02DOM-QUESTION-SIMPLE-ATS-001 | Question | Medium | Candidate profile; Job opening; Company contact; Internal contact | Exact required fields are not defined yet. | Required fields affect validation and data quality. | Answer during first scoped implementation specification. |
+| 02DOM-QUESTION-SIMPLE-ATS-002 | Question | Medium | Hiring workflow | Workflows may be organization-wide defaults, job-specific configurations, or both. | Workflow ownership affects relationship and configuration rules. | Decide before implementing workflow configuration. |
+| 02DOM-QUESTION-SIMPLE-ATS-003 | Question | Medium | Candidate relationship state | It is not yet decided whether users can move backward between non-terminal workflow stages. | Transition rules affect history, validation, and UI actions. | Decide before implementing workflow transitions. |
+| 02DOM-QUESTION-SIMPLE-ATS-004 | Question | Medium | Candidate | Duplicate candidate handling inside one customer organization is not defined. | Duplicate policy affects identity, search, and data cleanup behavior. | Decide when candidate search or merge behavior is scoped. |
+| 02DOM-QUESTION-SIMPLE-ATS-005 | Question | High | Candidate; Contact; Activity record | Retention, deletion, and anonymization expectations for personal data are not defined. | Privacy expectations may affect data lifecycle and authority. | Resolve before production handling of real candidate/contact data. |
 
 ## Generation stop conditions
 

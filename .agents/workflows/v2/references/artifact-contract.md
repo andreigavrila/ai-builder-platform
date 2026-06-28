@@ -91,6 +91,21 @@ For change artifacts and core artifacts other than `01-core/01-product.md` and `
 
 Never present an assumption as a fact.
 
+## Stable ID convention
+
+Core artifacts must prefix stable numbered IDs with the owning document code so references stay unambiguous across artifacts. Use `{DOC-PREFIX}-{ID-FAMILY}-{PROJECT-SLUG}-{NNN}` for normal numbered IDs, preserving any artifact-specific suffix that is needed for clarity. Examples: `01PROD-EPIC-SIMPLE-ATS-001`, `02DOM-RULE-SIMPLE-ATS-001`, `03ARCHI-DRIVER-SIMPLE-ATS-001`, and `04QUAL-NFR-SIMPLE-ATS-001`.
+
+Default core document prefixes:
+
+| Core artifact | Stable ID prefix |
+|:---|:---|
+| `01-core/01-product.md` | `01PROD-*` |
+| `01-core/02-domain.md` | `02DOM-*` |
+| `01-core/03-architecture.md` | `03ARCHI-*` |
+| `01-core/04-quality.md` | `04QUAL-*` |
+
+Later core artifacts should define an equally short document prefix before introducing stable numbered IDs. Change-package artifacts may use change-scoped IDs where the change contract requires them.
+
 ## Product artifact contract
 
 `01-core/01-product.md` is an executive product boundary, not a reasoning log. Use these sections in this order:
@@ -126,7 +141,7 @@ Use a Markdown table with exactly these columns:
 ### Product epics
 
 - Represent every known major product capability as an epic. Do not limit the core file to the first implementation slice or only the epics selected for the current change.
-- Use a numbered list and give every epic a stable `EPIC-*` ID and descriptive title.
+- Use a numbered list and give every epic a stable `01PROD-EPIC-*` ID and descriptive title.
 - For each epic, include a `Description` covering the target users, user goal, initiating context, included capability, and successful result.
 - For each epic, include `Sample user stories` with one or more stories explicitly prefixed `Sample:`. Use the form “As a …, I want …, so that …” where it fits.
 - Sample user stories illustrate intent and decomposition; they are not complete requirements or acceptance criteria. Change packages must refine selected stories before implementation.
@@ -134,18 +149,18 @@ Use a Markdown table with exactly these columns:
 
 ### Scope boundaries
 
-- Use a numbered list and give every boundary a stable `BOUNDARY-*` ID.
+- Use a numbered list and give every boundary a stable `01PROD-BOUNDARY-*` ID.
 - State what the product deliberately does not support, including adjacent workflows, user groups, channels, content, integrations, operational modes, or fidelity claims that could otherwise be inferred.
 - Do not repeat included behavior here; supported behavior belongs in `Product epics`.
 
 ### Product dependencies
 
-- Use a numbered list and give every dependency a stable `DEPENDENCY-*` ID.
+- Use a numbered list and give every dependency a stable `01PROD-DEPENDENCY-*` ID.
 - Record executive-level dependencies on external products, applications, services, public interfaces, operating platforms, runtime platforms, industry ecosystems, policy authorities, or other outside commitments that materially constrain product scope, availability, compliance, customer value, or go-to-market assumptions.
 - For each dependency, state why it is needed and the product impact if it is unavailable or changes materially.
 - Do not list generic prerequisites that are true for most software, such as durable storage, a web browser, authentication, network access, hosting, packages, build tools, test libraries, or common runtime platforms, unless the requirement makes a specific dependency product-defining. Those belong in architecture, engineering, or the relevant change package.
 - Before adding a dependency, apply this viability test: if the named thing could be swapped during technical design without changing product scope, user promise, regulatory posture, data authority, or external operating model, it is not a product dependency.
-- Prefer fewer, sharper dependencies over generic platform inventory. If no materially product-shaping dependencies are known yet, write one explicit entry such as `DEPENDENCY-{SLUG}-001 - No external product dependencies established yet` and state that later architecture or change design may introduce implementation dependencies.
+- Prefer fewer, sharper dependencies over generic platform inventory. If no materially product-shaping dependencies are known yet, write one explicit entry such as `01PROD-DEPENDENCY-{SLUG}-001 - No external product dependencies established yet` and state that later architecture or change design may introduce implementation dependencies.
 
 ### Product risks
 
@@ -154,7 +169,7 @@ Use a Markdown table with exactly these columns:
 | Risk ID | Risk | Probability | Impact | Rationale | Product impact | Watch/response |
 |:---|:---|:---|:---|:---|:---|:---|
 
-- Give every risk a stable `RISK-*` ID and concise descriptive name.
+- Give every risk a stable `01PROD-RISK-*` ID and concise descriptive name.
 - Use simple probability and impact values: `Low`, `Medium`, or `High`. Use the current requirement evidence and reasonable domain judgment; do not imply quantitative precision.
 - Order risks by severity: higher impact first, then higher probability. When two risks have the same rating, put the one that could invalidate more product scope earlier.
 - Record durable product-level risks that may affect scope, adoption, safety, legal exposure, usability, feasibility, delivery, or long-term quality.
@@ -165,7 +180,7 @@ Use a Markdown table with exactly these columns:
 ### Unresolved assumptions
 
 - Include only unresolved propositions that could change a product epic or scope boundary.
-- Give every assumption a stable `ASSUMPTION-*` ID and classify it as `blocking` or `non-blocking`.
+- Give every assumption a stable `01PROD-ASSUMPTION-*` ID and classify it as `blocking` or `non-blocking`.
 - Record the current proposition, why it matters, how it will be validated or invalidated, and the target epic or boundary that will absorb the result. Update a related product dependency at the same time when applicable.
 - A blocking assumption makes the artifact `blocked` and prevents progression past core initialization.
 - A non-blocking assumption requires a safe reversible default and a named lifecycle gate or event by which it must be resolved.
@@ -215,7 +230,7 @@ Use software-neutral, human-readable sections in this order:
 
 - Make relationships explicit so readers do not infer cardinality, ownership, or attachment rules from scattered prose.
 - Use a Markdown table with columns `Relationship ID`, `From`, `Relationship`, `To`, `Cardinality`, and `Meaning`.
-- Use stable `REL-*` IDs when relationships are materially referenced by rules, tests, or validation.
+- Use stable `02DOM-REL-*` IDs when relationships are materially referenced by rules, tests, or validation.
 - Include ownership, association, membership, attachment, status, and authority relationships when they affect behavior, access, data integrity, or lifecycle.
 
 ### States and transitions
@@ -233,7 +248,7 @@ Use software-neutral, human-readable sections in this order:
 ### Core rules and constraints
 
 - Record durable rules, invariants, permissions, eligibility rules, calculations, limits, ordering constraints, compliance constraints, and reproducibility constraints.
-- Use stable `RULE-*` IDs for rules that future requirements, tests, or validation may reference.
+- Use stable `02DOM-RULE-*` IDs for rules that future requirements, tests, or validation may reference.
 - Use a Markdown table with columns `Rule ID`, `Applies to`, `Rule`, and `Rationale`.
 - Link each rule through `Applies to` to a concept, entity, relationship entity, relationship, state, event, policy, or boundary named earlier in the domain artifact.
 - State rules as obligations or prohibitions that can be checked. Avoid implementation tasks.
@@ -250,6 +265,7 @@ Use software-neutral, human-readable sections in this order:
 - Use one unified Markdown table with columns `ID`, `Type`, `Importance`, `Applies to`, `Current position`, `Why it matters`, and `Resolution path`.
 - `Type` must be `Assumption` or `Question`.
 - `Importance` must be `Blocking`, `High`, `Medium`, or `Low`. Use `Blocking` only when the uncertainty must stop downstream generation.
+- Use stable `02DOM-ASSUMPTION-*` and `02DOM-QUESTION-*` IDs.
 - Record temporary reversible defaults and unresolved questions together so readers see both the current working position and the remaining uncertainty.
 - Do not hide a non-blocking question inside prose; if the work proceeds with a default, record the default as the current position and explain when it must be revisited.
 
@@ -304,13 +320,13 @@ Use compact tables or short lists to record the forces that shape the architectu
 - Include architecture-driving use cases, quality-attribute priorities, team skills, delivery constraints, budget or operational constraints, regulatory or privacy constraints, external-system constraints, and technology constraints when they materially apply.
 - State `Optimizes for` and `Does not optimize for yet` so future work does not over-design for unneeded scale, integration volume, analytics depth, compliance depth, portability, or platform abstraction.
 - Quality attributes may be prioritized here, but measurable targets, test methods, and acceptance thresholds belong in `04-quality.md`.
-- Use stable `DRIVER-*` IDs for drivers that explain architecture choices or ADRs.
+- Use stable `03ARCHI-DRIVER-*` IDs for drivers that explain architecture choices or ADRs.
 
 ### Architecture style and options
 
 - State the selected or recommended architecture style, such as modular monolith, layered monolith, event-driven system, microservices, serverless, data pipeline, plugin architecture, desktop application, game client, or embedded system.
 - Explain why the style fits the architecture drivers and what it trades off.
-- If stack or style is not fully accepted, include a compact recommendation table with `Option ID`, `Option`, `Fit`, `Strengths`, `Tradeoffs`, and `Recommendation`. Use stable `STACK-*` or `ARCH-OPTION-*` IDs.
+- If stack or style is not fully accepted, include a compact recommendation table with `Option ID`, `Option`, `Fit`, `Strengths`, `Tradeoffs`, and `Recommendation`. Use stable `03ARCHI-STACK-*` or `03ARCHI-ARCH-OPTION-*` IDs.
 - Name explicit split or evolution conditions. For example, when a modular monolith should split into services, when a queue should be introduced, or when a managed platform dependency becomes justified.
 - Route material choices to `Architecture decisions`; do not bury irreversible stack or topology choices in prose.
 
@@ -325,18 +341,18 @@ Use compact tables or short lists to record the forces that shape the architectu
 
 Use a Markdown table with columns `Component ID`, `Component`, `Type`, `Responsibility`, `Owns`, `Inbound contracts`, `Outbound dependencies`, and `Status/evidence`.
 
-- Use stable `COMPONENT-*` IDs for material runtime components, libraries, stores, external systems, workers, or infrastructure pieces.
+- Use stable `03ARCHI-COMPONENT-*` IDs for material runtime components, libraries, stores, external systems, workers, or infrastructure pieces.
 - `Type` should use concise values such as `UI`, `API`, `Service`, `Worker`, `Library`, `Data store`, `External system`, `Infrastructure`, or `Test harness`.
 - `Responsibility` should describe what the component is accountable for, not its implementation tasks.
 - `Owns` should identify technical ownership such as data, state, API surface, business capability enforcement, rendering concern, job execution, or infrastructure responsibility.
 - `Inbound contracts` and `Outbound dependencies` should name contracts or dependency targets, not vague words such as "frontend" or "backend" when a sharper name is known.
 - `Status/evidence` should distinguish `Verified`, `Intended`, `Assumed`, or `Undecided`; include repository paths or source references when verified.
-- Add a compact module table when internal module boundaries, ownership, extension points, or future split points matter. Use stable `MODULE-*` IDs.
+- Add a compact module table when internal module boundaries, ownership, extension points, or future split points matter. Use stable `03ARCHI-MODULE-*` IDs.
 
 ### Boundaries and dependency rules
 
 - Record architectural boundaries that future work must preserve, including layering, module ownership, allowed dependency direction, forbidden imports, runtime isolation, data access, and test boundaries.
-- Use stable `ARCH-BOUNDARY-*` or `ARCH-RULE-*` IDs when a boundary will be referenced by changes, tests, validation, or ADRs.
+- Use stable `03ARCHI-ARCH-BOUNDARY-*` or `03ARCHI-ARCH-RULE-*` IDs when a boundary will be referenced by changes, tests, validation, or ADRs.
 - State rules as obligations or prohibitions that can be checked through code review, static analysis, tests, or validation.
 - Include concrete major violation examples under the relevant boundary or rule when mistakes are plausible. Each example should name the bad design, why it violates the boundary, and where it should be caught. Prefer examples that production agents might otherwise accidentally implement, such as direct UI-to-database access, skipped authorization, controller-owned domain rules, cross-module persistence writes, direct third-party calls from the wrong layer, or infrastructure dependencies inside domain modules.
 - Do not duplicate product scope boundaries or domain invariants. Reference them only when describing where they are enforced technically.
@@ -344,14 +360,14 @@ Use a Markdown table with columns `Component ID`, `Component`, `Type`, `Responsi
 ### Data architecture
 
 - Record technical sources of truth, data stores, schema areas, ownership keys, tenant boundaries, transaction boundaries, caches, derived data, imports, exports, retention-sensitive movement, audit-relevant flows, migrations, backup/recovery assumptions, and reporting or analytics separation when relevant.
-- Use stable `DATA-*` or `FLOW-*` IDs for material data stores or flows.
+- Use stable `03ARCHI-DATA-*` or `03ARCHI-FLOW-*` IDs for material data stores or flows.
 - For each material flow, identify source, destination, triggering action, data class, trust or tenant boundary crossed, persistence behavior, and failure handling when known.
 - Keep domain-level ownership in `02-domain.md`; architecture owns how that ownership is enforced in storage, APIs, services, events, and infrastructure.
 
 ### Integration architecture
 
 - Record public APIs, internal module contracts, external service contracts, event contracts, webhooks, file formats, browser or platform APIs, and compatibility requirements that shape implementation.
-- Use stable `CONTRACT-*` IDs for contracts that requirements, tests, validation, or ADRs may reference.
+- Use stable `03ARCHI-CONTRACT-*` IDs for contracts that requirements, tests, validation, or ADRs may reference.
 - For each contract, identify provider, consumer, format or protocol, versioning expectation, compatibility rule, error behavior, and evidence or status when known.
 - Record integration rules that govern future additions, such as when an external service may be introduced, how adapters isolate third-party systems, how retries and idempotency are handled, and how external contracts are versioned.
 - Keep speculative integrations out of the component model unless the product or an accepted change has made them durable. Mention excluded integration categories as rules when product boundaries make them important.
@@ -359,7 +375,7 @@ Use a Markdown table with columns `Component ID`, `Component`, `Type`, `Responsi
 ### Trust boundaries and security posture
 
 - Identify security-relevant boundaries across users, organizations, processes, browsers, servers, networks, data stores, external systems, secrets, credentials, and personal or sensitive data.
-- Use stable `TRUST-*` IDs for trust boundaries that need explicit design or validation.
+- Use stable `03ARCHI-TRUST-*` IDs for trust boundaries that need explicit design or validation.
 - State how authentication, authorization, tenant isolation, input validation, output encoding, secret handling, and auditability are expected to be enforced when known.
 - If a sensitive boundary is not yet designed, record it as an assumption or open question and assess whether it blocks generation.
 
@@ -375,14 +391,14 @@ Use a Markdown table with columns `Component ID`, `Component`, `Type`, `Responsi
 
 Use a Markdown table with columns `Risk ID`, `Risk or tradeoff`, `Why accepted or plausible`, `Impact`, `Mitigation or watch signal`, and `Carries forward to`.
 
-- Use stable `ARCH-RISK-*` IDs.
+- Use stable `03ARCHI-ARCH-RISK-*` IDs.
 - Include only technical architecture risks and tradeoffs, not product adoption risks already owned by `01-product.md`.
 - Cover risks introduced by style, stack, data ownership, security posture, integration choices, deployment topology, team skills, cost exposure, migration strategy, and operational complexity when they materially apply.
 - Link each row to an ADR, quality attribute, boundary, assumption, or future change where it must be resolved or watched.
 
 ### Architecture decisions
 
-- List accepted architectural decisions with stable `ADR-*` references and a one-sentence consequence.
+- List accepted architectural decisions with stable `03ARCHI-ADR-*` references and a one-sentence consequence.
 - Include a concise ADR backlog for material unresolved choices, such as architecture style, stack selection, deployment topology, authentication, tenant isolation strategy, migration strategy, external integration policy, observability, and data-retention approach when they apply.
 - Store material decision records under `01-core/08-decisions/ADR-*.md`.
 - Do not create ADRs for obvious framework defaults, temporary implementation details, or choices still under consideration.
@@ -393,6 +409,7 @@ Use a Markdown table with columns `Risk ID`, `Risk or tradeoff`, `Why accepted o
 - Use one unified Markdown table with columns `ID`, `Type`, `Importance`, `Applies to`, `Current position`, `Why it matters`, and `Resolution path`.
 - `Type` must be `Assumption` or `Question`.
 - `Importance` must be `Blocking`, `High`, `Medium`, or `Low`. Use `Blocking` only when the uncertainty must stop downstream generation.
+- Use stable `03ARCHI-ASSUMPTION-*` and `03ARCHI-QUESTION-*` IDs.
 - Record reversible defaults as assumptions with a named gate where they must be revisited.
 - Do not present unverified technical guesses as facts in component, data, contract, or topology sections.
 
@@ -457,7 +474,7 @@ Allowed profiles are `unclassified`, `patch`, `feature`, and `initiative`. Use `
 }
 ```
 
-Preferred ID prefixes are `CHANGE`, `OUTCOME`, `EPIC`, `BOUNDARY`, `DEPENDENCY`, `RISK`, `ASSUMPTION`, `QUESTION`, `REL`, `REQ`, `RULE`, `DRIVER`, `STACK`, `ARCH-OPTION`, `COMPONENT`, `MODULE`, `ARCH-BOUNDARY`, `ARCH-RULE`, `DATA`, `FLOW`, `CONTRACT`, `TRUST`, `ARCH-RISK`, `NFR`, `ADR`, `TEST`, `TASK`, `CODE`, `EVIDENCE`, and `FINDING`. Preserve IDs across revisions; mark obsolete nodes superseded instead of renumbering them.
+Preferred base ID families are `CHANGE`, `OUTCOME`, `EPIC`, `BOUNDARY`, `DEPENDENCY`, `RISK`, `ASSUMPTION`, `QUESTION`, `REL`, `REQ`, `RULE`, `DRIVER`, `STACK`, `ARCH-OPTION`, `COMPONENT`, `MODULE`, `ARCH-BOUNDARY`, `ARCH-RULE`, `DATA`, `FLOW`, `CONTRACT`, `TRUST`, `ARCH-RISK`, `NFR`, `ADR`, `TEST`, `TASK`, `CODE`, `EVIDENCE`, and `FINDING`. In core artifacts, prefix these base families with the owning document prefix as described in `Stable ID convention`; for example, use `01PROD-EPIC-*`, `02DOM-RULE-*`, `03ARCHI-CONTRACT-*`, and `04QUAL-NFR-*`. Preserve IDs across revisions; mark obsolete nodes superseded instead of renumbering them.
 
 ## Change profiles
 

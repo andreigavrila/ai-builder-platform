@@ -8,6 +8,8 @@ V2 should produce durable project knowledge that is useful to humans first, then
 
 V2 uses separate knowledge layers. `01-core/` is the human-reviewable source of truth. `03-operational/` is the distilled AI-production context derived from the core and loaded by default for implementation and validation. `02-changes/{CHANGE-ID}/` contains one requirement implementation blueprint. Core remains canonical; distilled operational artifacts must be refreshed or marked stale when core changes alter production-agent behavior.
 
+Stable core IDs should make ownership obvious without opening the artifact that defines them. Prefix numbered IDs with the owning document code, such as `01PROD-*`, `02DOM-*`, `03ARCHI-*`, or `04QUAL-*`, then the semantic ID family. For example, prefer `03ARCHI-DRIVER-SIMPLE-ATS-001` over a globally ambiguous `DRIVER-SIMPLE-ATS-001`.
+
 ## Product blueprint
 
 `01-core/01-product.md` is the executive product boundary.
